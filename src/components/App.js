@@ -6,7 +6,24 @@ import Result from './Result'
 class App extends Component {
 
   state = {
-    value: ''
+    value: '',
+    date: '',
+    city: '',
+    sunrise: '',
+    sunset: '',
+    temp: '',
+    pressure: '',
+    wind: '',
+    err: '',
+}
+
+  handleCitySubmit = (e) => {
+    e.preventDefault()
+    console.log('potwierdzony formularz')
+    const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.value},pl&APPID=55bae99201abf05122511e2802d3fc8b`
+    fetch(API)
+    .then(response => console.log(response)) 
+    .catch(err => console.log(err))
   }
   
   handleInputChange = (e) => {
@@ -18,8 +35,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-       <Form value={this.state.value}
-         change={this.handleInputChange}
+       <Form 
+       value={this.state.value}
+      change={this.handleInputChange}
+      submit={this.handleCitySubmit}
        />
        <Result />
       </div>
