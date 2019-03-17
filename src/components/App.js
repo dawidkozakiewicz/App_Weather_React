@@ -22,10 +22,15 @@ class App extends Component {
     console.log('potwierdzony formularz')
     const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.value},pl&APPID=55bae99201abf05122511e2802d3fc8b`
     fetch(API)
-    .then(response => console.log(response)) 
-    .catch(err => console.log(err))
+    .then(response => {
+      if(response.ok) {
+        return response
+      }
+      throw Error("Nie udało się")
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
   }
-  
   handleInputChange = (e) => {
     this.setState({
       value: e.target.value
