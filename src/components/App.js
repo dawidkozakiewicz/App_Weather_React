@@ -31,7 +31,7 @@ class App extends Component {
 			.then((response) => response.json())
 			.then((data) => {
         const time = new Date().toLocaleDateString()
-				this.setState({
+				this.setState( prevState => ({
           err: false,
           date: time,
 			    city: this.state.value,
@@ -39,15 +39,16 @@ class App extends Component {
 			    sunset: data.sys.sunset,
 			    temp: data.main.temp,
 			    pressure: data.main.pressure,
-			    wind: data.wind,
-				});
+			    wind: data.wind.speed,
+				}));
 			})
-			.catch((err) => {
-			  this.setState({
-			    err: true,
-			    
-			  });
-			});
+			.catch(err => {
+				console.log(err)
+				this.setState(state => ({
+					err: true,
+					city: this.state.value
+				}))
+			})
 	};
 	handleInputChange = (e) => {
 		this.setState({
@@ -59,7 +60,7 @@ class App extends Component {
 		return (
 			<div className="App">
 				<Form value={this.state.value} change={this.handleInputChange} submit={this.handleCitySubmit} />
-				<Result error={this.state.err}/>
+				<Result weather={this.state}/>
 			</div>
 		);
 	}
