@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Form from './Form';
 import Result from './Result';
+import './App.css';
 const APIKey = '55bae99201abf05122511e2802d3fc8b';
 
 class App extends Component {
@@ -30,7 +31,7 @@ class App extends Component {
 			})
 			.then((response) => response.json())
 			.then((data) => {
-        const time = new Date().toLocaleDateString()
+        const time = new Date().toLocaleString()
 				this.setState( prevState => ({
           err: false,
           date: time,
@@ -44,9 +45,9 @@ class App extends Component {
 			})
 			.catch(err => {
 				console.log(err)
-				this.setState(state => ({
+				this.setState(prevState => ({
 					err: true,
-					city: this.state.value
+					city: prevState.value
 				}))
 			})
 	};
