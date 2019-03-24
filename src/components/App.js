@@ -1,113 +1,92 @@
 import React, { Component } from 'react';
-import Form from './Form';
-import Result from './Result';
+import AddTask from './AddTask';
+import TaskList from './TaskList';
 import './App.css';
-const APIKey = '55bae99201abf05122511e2802d3fc8b';
 
 class App extends Component {
-	state = {
-		value: '',
-		date: '',
-		city: '',
-		sunrise: '',
-		sunset: '',
-		temp: '',
-		pressure: '',
-		wind: '',
-		err: false
-	};
+  counter = 9
+  state = {
+    tasks: [
+      {
+        id: 0,
+        text: 'zagrać wreszcie w Wiedźmina 3',
+        date: '2018-02-15',
+        important: true,
+        active: true,
+        finishDate: null
+      },
+      { id: 1, text: "zrobić dobry uczynej", date: '2020-11-12', important: false, active: true, finishDate: null },
+      { id: 2, text: "pomalować dom po sylwestrze", date: '2019-09-11', important: false, active: true, finishDate: null },
+      { id: 3, text: "schudnąć 30 kilogramów", date: '2019-05-20', important: true, active: true, finishDate: null },
+      { id: 4, text: "sprzedać butelki po piwie (20 skrzynek)", date: '2020-11-12', important: false, active: true, finishDate: null },
+      { id: 5, text: "jeszcze raz pomalować dom", date: '2019-09-11', important: false, active: true, finishDate: null },
+      { id: 6, text: "fryzjer!!!", date: '2019-05-20', important: true, active: true, finishDate: null },
+      { id: 7, text: "nie odbierać poleconego od komornika", date: '2020-11-12', important: false, active: true, finishDate: null },
+      { id: 8, text: "kupić 2 butelki litrowe", date: '2019-09-11', important: false, active: true, finishDate: null },
 
-	// handleCitySubmit = (e) => {
-	// 	e.preventDefault();
-	// 	console.log('potwierdzony formularz');
-	// 	const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state
-	// 		.value},pl&APPID=${APIKey}&units=metric`;
-	// 	fetch(API)
-	// 		.then((response) => {
-	// 			if (response.ok) {
-	// 				return response;
-	// 			}
-	// 			throw Error('Nie udało się');
-	// 		})
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-  //       const time = new Date().toLocaleString()
-	// 			this.setState( prevState => ({
-  //         err: false,
-  //         date: time,
-	// 		    city: this.state.value,
-	// 		    sunrise: data.sys.sunrise,
-	// 		    sunset: data.sys.sunset,
-	// 		    temp: data.main.temp,
-	// 		    pressure: data.main.pressure,
-	// 		    wind: data.wind.speed,
-	// 			}));
-	// 		})
-	// 		.catch(err => {
-	// 			console.log(err)
-	// 			this.setState(prevState => ({ 
-	// 				err: true,
-	// 				city: prevState.value
-	// 			}))
-	// 		})
-	// };
+    ]
+  }
 
-	handleInputChange = (e) => {
-		this.setState({
-			value: e.target.value
-		});
-	};
+  deleteTask = (id) => {
+    console.log("delete elementu o id " + id);
+    // const tasks = [...this.state.tasks];
+    // const index = tasks.findIndex(task => task.id === id);
+    // tasks.splice(index, 1);
+    // this.setState({
+    //   tasks
+    // })
 
-  componentDidUpdate(prevProps, prevState) {
-		// console.log(`poprzednia wartość: ${prevState.value}`)
-		// console.log(`aktualna wartość: ${this.state.value}`)
-		if (prevState.value.length === 0) return
-		if (prevState.value !== this.state.value) {
-			
-			const API = `http://api.openweathermap.org/data/2.5/weather?q=${this.state
-			.value},pl&APPID=${APIKey}&units=metric`;
-		fetch(API)
-			.then((response) => {
-				if (response.ok) {
-					return response;
-				}
-				throw Error('Nie udało się');
-			})
-			.then((response) => response.json())
-			.then((data) => {
-        const time = new Date().toLocaleString()
-				this.setState( prevState => ({
-          err: false,
-          date: time,
-			    city: this.state.value,
-			    sunrise: data.sys.sunrise,
-			    sunset: data.sys.sunset,
-			    temp: data.main.temp,
-			    pressure: data.main.pressure,
-			    wind: data.wind.speed,
-				}));
-			})
-			.catch(err => {
-				console.log(err)
-				this.setState(prevState => ({ 
-					err: true,
-					city: prevState.value
-				}))
-			})
+    let tasks = [...this.state.tasks];
+    tasks = tasks.filter(task => task.id !== id)
+    this.setState({
+      tasks
+    })
+  }
+
+  changeTaskStatus = (id) => {
+    console.log("change w stanie elementu o id " + id);
+    const tasks = Array.from(this.state.tasks);
+    tasks.forEach(task => {
+      if (task.id === id) {
+        task.active = false;
+        task.finishDate = new Date().getTime()
+      }
+    })
+    this.setState({
+      tasks
+    })
+  }
+
+  addTask = (text, date, important) => {
+    // console.log("dodany obiekt");
+    const task = {
+      id: this.counter,
+      text, // tekst z inputa
+      date, //tekst z inputa
+      important, //wartość z inputa
+      active: true,
+      finishDate: null
+    }
+    this.counter++
+    console.log(task, this.counter);
+
+    this.setState(prevState => ({
+      tasks: [...prevState.tasks, task]
+    }))
 
 
-		}
+    return true
+  }
 
-	}
-
-	render() {
-		return (
-			<div className="App">
-				<Form value={this.state.value} change={this.handleInputChange} submit={this.handleCitySubmit} />
-				<Result weather={this.state}/>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div className="App">
+        <h1>TOD APP</h1>
+        <AddTask add={this.addTask} />
+        <TaskList tasks={this.state.tasks} delete={this.deleteTask} change={this.changeTaskStatus} />
+      </div>
+    );
+  }
 }
 
 export default App;
